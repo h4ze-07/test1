@@ -40,7 +40,7 @@ const ambientLight = new THREE.AmbientLight(0x404040, 1); // Мягкий све
 scene.add(ambientLight);
 
 // Загрузка 3D-модели
-const loader = new OBJLoader();
+const loader = new THREE.OBJLoader();
 let model;
 
 loader.load(
@@ -61,10 +61,23 @@ loader.load(
   }
 );
 
-// Адаптивность под размер экрана
-window.addEventListener("resize", function () {
-  updateRendererSize();
+// ScrollTrigger для прокрутки и вращения модели
+// GSAP библиотека должна быть загружена для работы ScrollTrigger
+ScrollTrigger.create({
+  trigger: ".main",
+  pin: "#modelContainer",
+  start: "top top",
+  end: "bottom bottom",
+  onUpdate: (self) => {
+    if (model) {
+      const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
+      model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
+    }
+  },
 });
+
+// Адаптивность под размер экрана
+window.addEventListener("resize", updateRendererSize);
 
 // Анимация рендеринга
 function animate() {
