@@ -44,14 +44,14 @@ const loader = new THREE.GLTFLoader();
 let model;
 
 loader.load(
-  "../assets/rocket/rocket_ship.glb",
+  "../assets/rocket/rocket.glb",
   function (gltf) {
     model = gltf.scene;
     scene.add(model);
 
-    model.position.set(1, -150, 1); // Позиция модели
+    model.position.set(0, 0, 0); // Позиция модели
     model.scale.set(1, 1, 1); // Масштаб модели
-    camera.position.z = 200; // Позиция камеры
+    camera.position.z = 30; // Позиция камеры
 
     renderer.render(scene, camera);
   },
@@ -61,20 +61,20 @@ loader.load(
   }
 );
 
-let lastScrollProgress = 0; // Хранение предыдущего прогресса
-ScrollTrigger.create({
-  trigger: ".main",
-  pin: "#roket",
-  start: "top top",
-  end: "bottom bottom",
-  onUpdate: (self) => {
-    if (model) {
-      // Вычисляем угол вращения от 0 до 2 * Math.PI (0 до 360 градусов)
-      const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
-      model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
-    }
-  },
-});
+// let lastScrollProgress = 0; // Хранение предыдущего прогресса
+// ScrollTrigger.create({
+//   trigger: ".main",
+//   pin: "#roket",
+//   start: "top top",
+//   end: "bottom bottom",
+//   onUpdate: (self) => {
+//     if (model) {
+//       // Вычисляем угол вращения от 0 до 2 * Math.PI (0 до 360 градусов)
+//       const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
+//       model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
+//     }
+//   },
+// });
 
 // Адаптивность под размер экрана
 window.addEventListener("resize", function () {
