@@ -1,6 +1,3 @@
-import * as THREE from "./three.module.min.js";
-import { OBJLoader } from "./OBJLoader.js";
-
 // Создание сцены
 const scene = new THREE.Scene();
 
