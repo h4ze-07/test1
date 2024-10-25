@@ -1,8 +1,8 @@
 // Создание сцены
-const scene = new THREE.Scene();
+const scene2 = new THREE.Scene();
 
 // Создание камеры
-const camera = new THREE.PerspectiveCamera(
+const camera2 = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
@@ -10,50 +10,50 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 // Создание рендерера с прозрачным фоном
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setClearColor(0x000000, 0); // Черный цвет с полной прозрачностью
+const renderer2 = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer2.setClearColor(0x000000, 0); // Черный цвет с полной прозрачностью
 
 // Получение контейнера для рендерера
 const container = document.getElementById("roket");
-container.appendChild(renderer.domElement);
+container.appendChild(renderer2.domElement);
 
 // Функция для обновления размера рендерера
-function updateRendererSize() {
+function updaterenderer2Size() {
   const width = container.clientWidth;
-  const aspectRatio = camera.aspect;
+  const aspectRatio = camera2.aspect;
   const height = width / aspectRatio;
 
-  renderer.setSize(width, height);
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
+  renderer2.setSize(width, height);
+  camera2.aspect = width / height;
+  camera2.updateProjectionMatrix();
 }
 
 // Инициализация размеров рендерера
-updateRendererSize();
+updaterenderer2Size();
 
 // Создание света для освещения модели
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(1, 1, 1).normalize();
-scene.add(light);
+const light2 = new THREE.DirectionalLight(0xffffff, 1);
+light2.position.set(1, 1, 1).normalize();
+scene2.add(light2);
 
-const ambientLight = new THREE.AmbientLight(0x404040, 1); // Мягкий свет
-scene.add(ambientLight);
+const ambientlight2 = new THREE.AmbientLight(0x404040, 1); // Мягкий свет
+scene2.add(ambientlight2);
 
 // Загрузка 3D-модели
-const loader = new THREE.OBJLoader();
+const loader2 = new OBJLoader();
 let model;
 
-loader.load(
+loader2.load(
   "../assets/Proton.obj",
   function (obj) {
     model = obj;
-    scene.add(model);
+    scene2.add(model);
 
     model.position.set(1, -10, -10); // Позиция модели
     model.scale.set(1, 1, 1); // Масштаб модели
-    camera.position.z = 5; // Позиция камеры
+    camera2.position.z = 5; // Позиция камеры
 
-    renderer.render(scene, camera);
+    renderer2.render(scene2, camera2);
   },
   undefined, // можно добавить функцию для отслеживания прогресса
   function (error) {
@@ -62,7 +62,6 @@ loader.load(
 );
 
 // ScrollTrigger для прокрутки и вращения модели
-// GSAP библиотека должна быть загружена для работы ScrollTrigger
 ScrollTrigger.create({
   trigger: ".main",
   pin: "#modelContainer",
@@ -70,18 +69,18 @@ ScrollTrigger.create({
   end: "bottom bottom",
   onUpdate: (self) => {
     if (model) {
-      const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
-      model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
+      const rotationAngle = self.progress * 2 * Math.PI;
+      model.rotation.y = rotationAngle;
     }
   },
 });
 
 // Адаптивность под размер экрана
-window.addEventListener("resize", updateRendererSize);
+window.addEventListener("resize", updaterenderer2Size);
 
 // Анимация рендеринга
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
+function animate2() {
+  requestAnimationFrame(animate2);
+  renderer2.render(scene2, camera2);
 }
-animate();
+animate2();
