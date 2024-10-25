@@ -1,5 +1,5 @@
 import * as THREE from "./three.module.min.js";
-import { GLTFLoader } from "./GLTFLoader.js";
+import { OBJLoader } from "./OBJLoader.js";
 
 // Создание сцены
 const scene = new THREE.Scene();
@@ -43,13 +43,13 @@ const ambientLight = new THREE.AmbientLight(0x404040, 1); // Мягкий све
 scene.add(ambientLight);
 
 // Загрузка 3D-модели
-const loader = new THREE.GLTFLoader();
+const loader = new OBJLoader();
 let model;
 
 loader.load(
   "../assets/Proton.obj",
-  function (gltf) {
-    model = gltf.scene;
+  function (obj) {
+    model = obj;
     scene.add(model);
 
     model.position.set(1, -10, -10); // Позиция модели
@@ -64,21 +64,6 @@ loader.load(
   }
 );
 
-// let lastScrollProgress = 0; // Хранение предыдущего прогресса
-// ScrollTrigger.create({
-//   trigger: ".main",
-//   pin: "#modelContainer",
-//   start: "top top",
-//   end: "bottom bottom",
-//   onUpdate: (self) => {
-//     if (model) {
-//       // Вычисляем угол вращения от 0 до 2 * Math.PI (0 до 360 градусов)
-//       const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
-//       model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
-//     }
-//   },
-// });
-
 // Адаптивность под размер экрана
 window.addEventListener("resize", function () {
   updateRendererSize();
@@ -90,22 +75,3 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
-
-ScrollTrigger.create({
-  trigger: ".second",
-  start: "top bottom",
-  end: "top top",
-  onUpdate: (self) => {
-    if (model) {
-      const rotationAngle = self.progress * 0.3 * Math.PI; // Угол от 0 до 2 * PI
-
-      console.log(rotationAngle);
-
-      model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
-
-      model.scale.set(1 + self.progress, 1 + self.progress, 1 + self.progress);
-
-      model.position.set(1 - self.progress * 10, -10 - self.progress * 20, -10);
-    }
-  },
-});

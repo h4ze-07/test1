@@ -77,3 +77,8 @@ body {
 .vh {
   height: 100vh;
 }
+#roket {
+  display: block;
+  width: 100%;
+  position: fixed;
+}
