@@ -11,7 +11,7 @@
 }
 
 body {
-  background-color: #272727;
+  background-color: #000;
 }
 
 .canvas1 {
@@ -59,8 +59,8 @@ body {
   position: relative;
   padding: 40px;
   overflow: hidden;
-  backdrop-filter: blur(1px);
-  background-color: #27272721;
+  /* backdrop-filter: blur(1px);
+  background-color: #27272721; */
 }
 
 /* .hero__inner-wrap::before {

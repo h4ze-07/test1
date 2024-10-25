@@ -1,52 +1,57 @@
-import * as THREE from './three.module.min.js';
-
-const canvas1 = document.querySelector('.canvas1')
+const canvas1 = document.querySelector('.canvas1');
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({canvas: canvas1});
+const renderer = new THREE.WebGLRenderer({ canvas: canvas1, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Функция для создания звезд
-function createStars() {
-  const starGeometry = new THREE.BufferGeometry();
-  const starMaterial = new THREE.PointsMaterial({ color: 0xffffff });
+// Создание звездного материала и геометрии
+const starGeometry = new THREE.BufferGeometry();
+const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 1 });
+const starVertices = [];
 
-  const starVertices = [];
-  for (let i = 0; i < 10000; i++) { // Количество звезд
-    const x = (Math.random() - 0.5) * 2000; // Координаты X
-    const y = (Math.random() - 0.5) * 2000; // Координаты Y
-    const z = -Math.random() * 2000; // Координаты Z
+const radius = 2000; // Радиус, увеличенный для глубокого звездного пространства
+const starCount = 1500;
+
+// Генерация звезд с рандомными координатами вокруг камеры
+for (let i = 0; i < starCount; i++) {
+    const x = (Math.random() - 0.5) * radius;
+    const y = (Math.random() - 0.5) * radius;
+    const z = -Math.random() * radius; // Всегда за камерой
+
     starVertices.push(x, y, z);
-  }
-
-  starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-  const stars = new THREE.Points(starGeometry, starMaterial);
-  scene.add(stars);
 }
 
-createStars(); // Вызов функции для создания звезд
+starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+const stars = new THREE.Points(starGeometry, starMaterial);
+scene.add(stars);
 
 // Позиция камеры
 camera.position.z = 1;
 
-// Анимация движения звезд
 function animate() {
-  requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-  // Добавим вращение сцены, чтобы создать иллюзию движения
-  scene.rotation.y += 0.0005;
+    const positions = starGeometry.attributes.position.array;
 
-  renderer.render(scene, camera);
+    // Обновление позиции звезд для эффекта полета
+    for (let i = 0; i < positions.length; i += 3) {
+        positions[i + 2] += 2; // Смещаем звезду ближе к камере быстрее
+
+        // Перемещаем звезду дальше, если она близко к камере
+        if (positions[i + 2] > camera.position.z) {
+            positions[i + 2] = -radius;
+            positions[i] = (Math.random() - 0.5) * radius; // Перераспределяем по x
+            positions[i + 1] = (Math.random() - 0.5) * radius; // Перераспределяем по y
+        }
+    }
+
+    starGeometry.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
 }
-animate();
 
-// Обновление размеров рендерера при изменении размеров окна
-window.addEventListener('resize', () => {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-});
+animate();
 
 // animation
 gsap.set('.canvas1', {opacity: 0})
