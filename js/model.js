@@ -1,8 +1,8 @@
 // Создание сцены
-const scene2 = new THREE.Scene();
+const scene = new THREE.Scene();
 
 // Создание камеры
-const camera2 = new THREE.PerspectiveCamera(
+const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
@@ -10,50 +10,50 @@ const camera2 = new THREE.PerspectiveCamera(
 );
 
 // Создание рендерера с прозрачным фоном
-const renderer2 = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer2.setClearColor(0x000000, 0); // Черный цвет с полной прозрачностью
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setClearColor(0x000000, 0); // Черный цвет с полной прозрачностью
 
 // Получение контейнера для рендерера
 const container = document.getElementById("roket");
-container.appendChild(renderer2.domElement);
+container.appendChild(renderer.domElement);
 
 // Функция для обновления размера рендерера
-function updaterenderer2Size() {
+function updateRendererSize() {
   const width = container.clientWidth;
-  const aspectRatio = camera2.aspect;
+  const aspectRatio = camera.aspect;
   const height = width / aspectRatio;
 
-  renderer2.setSize(width, height);
-  camera2.aspect = width / height;
-  camera2.updateProjectionMatrix();
+  renderer.setSize(width, height);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
 }
 
 // Инициализация размеров рендерера
-updaterenderer2Size();
+updateRendererSize();
 
 // Создание света для освещения модели
-const light2 = new THREE.DirectionalLight(0xffffff, 1);
-light2.position.set(1, 1, 1).normalize();
-scene2.add(light2);
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(1, 1, 1).normalize();
+scene.add(light);
 
-const ambientlight2 = new THREE.AmbientLight(0x404040, 1); // Мягкий свет
-scene2.add(ambientlight2);
+const ambientLight = new THREE.AmbientLight(0x404040, 1); // Мягкий свет
+scene.add(ambientLight);
 
 // Загрузка 3D-модели
-const loader2 = new OBJLoader();
+const loader = new THREE.GLTFLoader();
 let model;
 
-loader2.load(
-  "../assets/Proton.obj",
-  function (obj) {
-    model = obj;
-    scene2.add(model);
+loader.load(
+  "../assets/rocket/rocket_ship.glb",
+  function (gltf) {
+    model = gltf.scene;
+    scene.add(model);
 
-    model.position.set(1, -10, -10); // Позиция модели
+    model.position.set(1, -150, 1); // Позиция модели
     model.scale.set(1, 1, 1); // Масштаб модели
-    camera2.position.z = 5; // Позиция камеры
+    camera.position.z = 200; // Позиция камеры
 
-    renderer2.render(scene2, camera2);
+    renderer.render(scene, camera);
   },
   undefined, // можно добавить функцию для отслеживания прогресса
   function (error) {
@@ -61,26 +61,48 @@ loader2.load(
   }
 );
 
-// ScrollTrigger для прокрутки и вращения модели
+let lastScrollProgress = 0; // Хранение предыдущего прогресса
 ScrollTrigger.create({
   trigger: ".main",
-  pin: "#modelContainer",
+  pin: "#roket",
   start: "top top",
   end: "bottom bottom",
   onUpdate: (self) => {
     if (model) {
-      const rotationAngle = self.progress * 2 * Math.PI;
-      model.rotation.y = rotationAngle;
+      // Вычисляем угол вращения от 0 до 2 * Math.PI (0 до 360 градусов)
+      const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
+      model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
     }
   },
 });
 
 // Адаптивность под размер экрана
-window.addEventListener("resize", updaterenderer2Size);
+window.addEventListener("resize", function () {
+  updateRendererSize();
+});
 
 // Анимация рендеринга
-function animate2() {
-  requestAnimationFrame(animate2);
-  renderer2.render(scene2, camera2);
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
 }
-animate2();
+animate();
+
+// ScrollTrigger.create({
+//   trigger: ".second",
+//   start: "top bottom",
+//   end: "top top",
+//   onUpdate: (self) => {
+//     if (model) {
+//       const rotationAngle = self.progress * 0.3 * Math.PI; // Угол от 0 до 2 * PI
+
+//       console.log(rotationAngle);
+
+//       model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
+
+//       model.scale.set(1 + self.progress, 1 + self.progress, 1 + self.progress);
+
+//       model.position.set(1 - self.progress * 10, -10 - self.progress * 20, -10);
+//     }
+//   },
+// });
