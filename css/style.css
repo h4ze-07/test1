@@ -11,7 +11,7 @@
 }
 
 body {
-  background-color: #b6b6b6;
+  background-color: #000000;
 }
 
 .canvas1 {
@@ -79,8 +79,6 @@ body {
 }
 #roket {
   display: block;
-  background-color: #b6b6b6;
-  width: 500px;
-  height: 500px;
+
   position: fixed;
 }

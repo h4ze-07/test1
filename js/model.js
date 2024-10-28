@@ -10,7 +10,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 // Создание рендерера с прозрачным фоном
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setClearColor(0x000000, 0); // Черный цвет с полной прозрачностью
 
 // Получение контейнера для рендерера
@@ -43,38 +43,40 @@ scene.add(ambientLight);
 const loader = new THREE.GLTFLoader();
 let model;
 
+const modelGroup = new THREE.Group();
+scene.add(modelGroup);
+
 loader.load(
   "../assets/rocket/rocket.glb",
   function (gltf) {
     model = gltf.scene;
-    scene.add(model);
+    modelGroup.add(model); // Добавляем модель в группу
 
-    model.position.set(0, 0, 0); // Позиция модели
+    modelGroup.position.set(-10, 0, 0); // Позиция группы (центр)
     model.scale.set(1, 1, 1); // Масштаб модели
     camera.position.z = 30; // Позиция камеры
 
     renderer.render(scene, camera);
   },
-  undefined, // можно добавить функцию для отслеживания прогресса
+  undefined, // Можно добавить функцию для отслеживания прогресса
   function (error) {
     console.error("Ошибка загрузки модели:", error);
   }
 );
 
-// let lastScrollProgress = 0; // Хранение предыдущего прогресса
-// ScrollTrigger.create({
-//   trigger: ".main",
-//   pin: "#roket",
-//   start: "top top",
-//   end: "bottom bottom",
-//   onUpdate: (self) => {
-//     if (model) {
-//       // Вычисляем угол вращения от 0 до 2 * Math.PI (0 до 360 градусов)
-//       const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
-//       model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
-//     }
-//   },
-// });
+let lastScrollProgress = 0; // Хранение предыдущего прогресса
+ScrollTrigger.create({
+  trigger: ".main",
+  start: "top top",
+  end: "bottom bottom",
+  onUpdate: (self) => {
+    if (model) {
+      // Вычисляем угол вращения от 0 до 2 * Math.PI (0 до 360 градусов)
+      const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
+      model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
+    }
+  },
+});
 
 // Адаптивность под размер экрана
 window.addEventListener("resize", function () {
