@@ -88,3 +88,12 @@ function animateModel() {
   rendererModel.render(sceneModel, cameraModel);
 }
 animateModel();
+
+// dont do it
+// ScrollTrigger.create({
+//   trigger: ".cube-trigger",
+//   start: "top top",
+//   end: "bottom bottom",
+//   pin: "#cube",
+//   onUpdate: (self) => {},
+// });

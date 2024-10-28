@@ -76,13 +76,26 @@ body {
 } */
 .vh {
   height: 100vh;
+
 }
 #cube {
   display: block;
   width: 50%;
-  /* background-color: #fff; */
+  height: auto;
   position: fixed;
+  z-index: 2;
   right: 0;
   top: 50%;
   translate: 0 -50%;
+}
+.rotate {
+  rotate: 180deg;
+}
+.cube-trigger {
+  position: relative;
+  overflow: hidden;
+}
+section {
+  z-index: 1;
+  display: block;
 }
