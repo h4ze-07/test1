@@ -1,3 +1,11 @@
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+
+console.log(GLTFLoader, OBJLoader);
+
+
 const canvas1 = document.querySelector(".canvas1");
 
 const scene = new THREE.Scene();
@@ -73,3 +81,4 @@ tl.to(".canvas1", { opacity: 1, duration: 0.7 })
   .to(".hero", { opacity: 1, duration: 0.4 })
   .to(".hero__title", { opacity: 1, y: 0, duration: 0.7 })
   .to(".hero__text", { opacity: 1, y: 0, duration: 0.5 });
+

@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 // Находим элемент cube
 const container = document.getElementById("cube");
 
