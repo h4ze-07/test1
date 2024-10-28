@@ -77,8 +77,12 @@ body {
 .vh {
   height: 100vh;
 }
-#roket {
+#cube {
   display: block;
-
+  width: 50%;
+  /* background-color: #fff; */
   position: fixed;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
 }

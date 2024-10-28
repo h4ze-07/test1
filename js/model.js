@@ -1,110 +1,57 @@
-// Создание сцены
-const scene = new THREE.Scene();
+// Находим элемент cube
+const container = document.getElementById("cube");
 
-// Создание камеры
-const camera = new THREE.PerspectiveCamera(
+// Создаем сцену, камеру и рендерер с прозрачным фоном
+const sceneModel = new THREE.Scene();
+const cameraModel = new THREE.PerspectiveCamera(
   75,
-  window.innerWidth / window.innerHeight,
+  1, // Соотношение сторон камеры будет обновляться динамически
   0.1,
   1000
 );
 
-// Создание рендерера с прозрачным фоном
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setClearColor(0x000000, 0); // Черный цвет с полной прозрачностью
-
-// Получение контейнера для рендерера
-const container = document.getElementById("roket");
-container.appendChild(renderer.domElement);
+const rendererModel = new THREE.WebGLRenderer({ alpha: true });
+rendererModel.setSize(container.clientWidth, container.clientWidth);
+rendererModel.setClearColor(0x000000, 0); // Устанавливаем прозрачный фон
+container.appendChild(rendererModel.domElement);
 
 // Функция для обновления размера рендерера
 function updateRendererSize() {
   const width = container.clientWidth;
-  const aspectRatio = camera.aspect;
-  const height = width / aspectRatio;
+  const height = width; // Высота будет равна ширине для пропорции 1:1
 
-  renderer.setSize(width, height);
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
+  rendererModel.setSize(width, height);
+  cameraModel.aspect = width / height;
+  cameraModel.updateProjectionMatrix();
 }
 
-// Инициализация размеров рендерера
+// Обновление рендерера при изменении размера окна
+window.addEventListener("resize", updateRendererSize);
+
+// Инициализируем размеры рендера
 updateRendererSize();
 
-// Создание света для освещения модели
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(1, 1, 1).normalize();
-scene.add(light);
-
-const ambientLight = new THREE.AmbientLight(0x404040, 1); // Мягкий свет
-scene.add(ambientLight);
-
-// Загрузка 3D-модели
-const loader = new THREE.GLTFLoader();
-let model;
-
-const modelGroup = new THREE.Group();
-scene.add(modelGroup);
-
-loader.load(
-  "../assets/rocket/rocket.glb",
-  function (gltf) {
-    model = gltf.scene;
-    modelGroup.add(model); // Добавляем модель в группу
-
-    modelGroup.position.set(-10, 0, 0); // Позиция группы (центр)
-    model.scale.set(1, 1, 1); // Масштаб модели
-    camera.position.z = 30; // Позиция камеры
-
-    renderer.render(scene, camera);
-  },
-  undefined, // Можно добавить функцию для отслеживания прогресса
-  function (error) {
-    console.error("Ошибка загрузки модели:", error);
-  }
-);
-
-let lastScrollProgress = 0; // Хранение предыдущего прогресса
-ScrollTrigger.create({
-  trigger: ".main",
-  start: "top top",
-  end: "bottom bottom",
-  onUpdate: (self) => {
-    if (model) {
-      // Вычисляем угол вращения от 0 до 2 * Math.PI (0 до 360 градусов)
-      const rotationAngle = self.progress * 2 * Math.PI; // Угол от 0 до 2 * PI
-      model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
-    }
-  },
+// Создаем куб
+const geometryModel = new THREE.BoxGeometry(3, 3, 3, 10, 10, 10);
+const materialModel = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  wireframe: true,
 });
+const cube = new THREE.Mesh(geometryModel, materialModel);
+sceneModel.add(cube);
 
-// Адаптивность под размер экрана
-window.addEventListener("resize", function () {
-  updateRendererSize();
-});
+// Устанавливаем позицию камеры
+cameraModel.position.z = 5;
 
-// Анимация рендеринга
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
+// Анимация
+function animateModel() {
+  requestAnimationFrame(animateModel);
+
+  // Задаем вращение куба
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+
+  // Рендер сцены
+  rendererModel.render(sceneModel, cameraModel);
 }
-animate();
-
-// ScrollTrigger.create({
-//   trigger: ".second",
-//   start: "top bottom",
-//   end: "top top",
-//   onUpdate: (self) => {
-//     if (model) {
-//       const rotationAngle = self.progress * 0.3 * Math.PI; // Угол от 0 до 2 * PI
-
-//       console.log(rotationAngle);
-
-//       model.rotation.y = rotationAngle; // Устанавливаем угол вращения модели
-
-//       model.scale.set(1 + self.progress, 1 + self.progress, 1 + self.progress);
-
-//       model.position.set(1 - self.progress * 10, -10 - self.progress * 20, -10);
-//     }
-//   },
-// });
+animateModel();
